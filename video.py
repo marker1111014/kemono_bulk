@@ -7,14 +7,7 @@ from urllib.parse import unquote  # 用來解碼 URL 轉換的字元
 from tqdm import tqdm  # 進度條模組
 
 # 取得當前執行檔的目錄
-current_directory = os.path.dirname(os.path.abspath(__file__))
-
-# 設定下載資料夾名稱
-download_folder = os.path.join(current_directory, "downloads")
-
-# 確保下載資料夾存在
-if not os.path.exists(download_folder):
-    os.makedirs(download_folder)
+current_directory = os.getcwd()  # 改用 os.getcwd() 確保獲取當前目錄
 
 # 啟動無頭模式的 Chrome
 options = uc.ChromeOptions()
@@ -44,7 +37,7 @@ if attachment_links:
         total_size = int(response.headers.get("content-length", 0))  # 檔案大小（位元組）
 
         if response.status_code == 200:
-            file_path = os.path.join(download_folder, file_name)
+            file_path = os.path.join(current_directory, file_name)  # 儲存在當前目錄
             with open(file_path, "wb") as file, tqdm(
                 total=total_size, unit="B", unit_scale=True, unit_divisor=1024, desc=file_name
             ) as progress_bar:
